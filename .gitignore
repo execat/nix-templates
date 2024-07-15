@@ -1,1 +1,4 @@
 */.direnv
+
+elixir/.nix-mix
+elixir/.nix-hex
