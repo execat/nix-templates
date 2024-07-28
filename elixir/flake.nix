@@ -4,6 +4,7 @@
   # inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*.tar.gz";
   # Nixpkgs: Branch: Nixos-unstable on 15th July 2024
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/693bc46d169f5af9c992095736e82c3488bf7dbb";
+  # inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*.tar.gz";
 
   outputs = { self, nixpkgs }:
     let
@@ -23,10 +24,10 @@
         # ==== ERLANG ====
 
         # use whatever version is currently defined in nixpkgs
-        # erlang = pkgs.beam.interpreters.erlang;
+        erlang = final.beam.interpreters.erlang;
 
         # use latest version of Erlang 27
-        erlang = final.beam.interpreters.erlang_27;
+        # erlang = final.beam.interpreters.erlang_27;
 
         # specify exact version of Erlang OTP
         # erlang = pkgs.beam.interpreters.erlang.override {
@@ -89,15 +90,16 @@
 
             # make hex from Nixpkgs available
             # `mix local.hex` will install hex into MIX_HOME and should take precedence
-            export MIX_PATH="${pkgs.beam.packages.erlang.hex}/lib/erlang/lib/hex/ebin"
+            export MIX_PATH="${(pkgs.beam.packagesWith pkgs.beam.interpreters.erlang).hex}/lib/erlang/lib/hex/ebin"
             export PATH=$MIX_HOME/bin:$HEX_HOME/bin:$PATH
 
-            # keep your shell history in iex
+            # keep shell history in iex
             export ERL_AFLAGS="-kernel shell_history enabled"
 
-            # Install Phoenix
+            alias serve='iex -S mix phx.server';
             mix archive.install hex phx_new --force
           '';
+
         };
       });
     };
