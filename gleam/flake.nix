@@ -12,49 +12,10 @@
       forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ self.overlays.default ];
         };
       });
     in
     {
-      overlays.default = final: prev: rec {
-        # documentation
-        # https://nixos.org/manual/nixpkgs/stable/#sec-beam
-
-        # ==== ERLANG ====
-
-        # use whatever version is currently defined in nixpkgs
-        erlang = final.beam.interpreters.erlang;
-
-        # use latest version of Erlang 27
-        # erlang = final.beam.interpreters.erlang_27;
-
-        # specify exact version of Erlang OTP
-        # erlang = pkgs.beam.interpreters.erlang.override {
-        #   version = "26.2.2";
-        #   sha256 = "sha256-7S+mC4pDcbXyhW2r5y8+VcX9JQXq5iEUJZiFmgVMPZ0=";
-        # }
-
-        # ==== BEAM packages ====
-
-        # all BEAM packages will be compile with your preferred erlang version
-        pkgs-beam = final.beam.packagesWith erlang;
-
-        # ==== Gleam ====
-
-        # use whatever version is currently defined in nixpkgs
-        # gleam = pkgs-beam.gleam;
-
-        # use latest version of Gleam
-        gleam = pkgs-beam.gleam;
-
-        # specify exact version of Gleam
-        # gleam = pkgs-beam.gleam.override {
-        #   version = "1.17.1";
-        #   sha256 = "sha256-a7A+426uuo3bUjggkglY1lqHmSbZNpjPaFpQUXYtW9k=";
-        # };
-      };
-
       devShells = forEachSupportedSystem ({ pkgs }: {
         default = pkgs.mkShell {
           packages = with pkgs; [
