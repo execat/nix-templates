@@ -1,4 +1,5 @@
 */.direnv
 
-elixir/.nix-mix
-elixir/.nix-hex
+# Remove BEAM language folders
+*/.nix-mix
+*/.nix-hex
