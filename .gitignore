@@ -1,5 +1,12 @@
 */.direnv
 
-# Remove BEAM language folders
+# BEAM language folders
 */.nix-mix
 */.nix-hex
+
+# Python virtual environments
+python/.venv
+
+# Aider chat history and logs
+.aider*
+
