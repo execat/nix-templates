@@ -1,19 +1,14 @@
 {
   description = "A Nix-flake-based Elixir development environment";
 
-  # inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*.tar.gz";
-  # Nixpkgs: Branch: Nixos-unstable on 15th July 2024
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/693bc46d169f5af9c992095736e82c3488bf7dbb";
-  # inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*.tar.gz";
+  inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*.tar.gz";
 
   outputs = { self, nixpkgs }:
     let
+      # Helper to provide system-specific attributes
       supportedSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-      forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ self.overlays.default ];
-        };
+      forAllSupportedSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
+        pkgs = import nixpkgs { inherit system; };
       });
     in
     {
@@ -55,7 +50,7 @@
         # };
       };
 
-      devShells = forEachSupportedSystem ({ pkgs }: {
+      devShells = forAllSupportedSystems ({ pkgs }: {
         default = pkgs.mkShell {
           packages = with pkgs; [
             # use the Elixr/OTP versions defined above; will also install OTP, mix, hex, rebar3

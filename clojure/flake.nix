@@ -8,9 +8,10 @@
     let
       javaVersion = 22; # Change this value to update the whole stack
 
+      # Helper to provide system-specific attributes
       supportedSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-      forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
-        pkgs = import nixpkgs { inherit system; overlays = [ self.overlays.default ]; };
+      forAllSupportedSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
+        pkgs = import nixpkgs { inherit system; };
       });
     in
     {
@@ -22,7 +23,7 @@
           leiningen = prev.leiningen.override { inherit jdk; };
         };
 
-      devShells = forEachSupportedSystem ({ pkgs }: {
+      devShells = forAllSupportedSystems ({ pkgs }: {
         default = pkgs.mkShell {
           packages = with pkgs; [ boot clojure leiningen ];
         };
