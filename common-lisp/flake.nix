@@ -1,8 +1,10 @@
 {
-  description = "A Nix-flake-based Nix development environment";
+  description = "An empty flake template that you can adapt to your own environment";
 
+  # Flake inputs
   inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*.tar.gz";
 
+  # Flake outputs
   outputs = { self, nixpkgs }:
     let
       # Helper to provide system-specific attributes
@@ -15,14 +17,15 @@
       devShells = forAllSupportedSystems ({ pkgs }: {
         default = pkgs.mkShell {
           packages = with pkgs; [
-            cachix
-            niv
-            nil
-            nixfmt-classic
-            statix
-            vulnix
-            haskellPackages.dhall-nix
+            sbcl
           ];
+
+          # Set any environment variables for your dev shell
+          env = { };
+
+          # Add any shell logic you want executed any time the environment is activated
+          shellHook = ''
+          '';
         };
       });
     };
