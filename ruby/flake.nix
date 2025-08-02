@@ -26,7 +26,7 @@
             fswatch
             watchman
 
-            rubyPackages_3_3.activesupport
+            # If getting weird errors, start removing gems from here
             rubyPackages_3_3.awesome_print
             rubyPackages_3_3.irb
             rubyPackages_3_3.pry
